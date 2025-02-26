@@ -11,6 +11,8 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "outDir": "dist"
   },
   "include": [
