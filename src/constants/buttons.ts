@@ -1,8 +1,10 @@
-const { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require("discord.js")
-const fs = require("fs")
-const { defaultButtonsConfig } = require("./defaultEmbedsAndButtonsConfig")
+import { ActionRowBuilder, ButtonBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } from "discord.js"
+import fs from "fs"
+import { defaultButtonsConfig } from "./defaultEmbedsAndButtonsConfig"
+import { ButtonsType } from "../types/CustomTypes"
+import { truncateString } from "../utils/truncateString"
 
-const Buttons = {
+const Buttons: ButtonsType = {
   close: new ActionRowBuilder()
     .addComponents([
       new ButtonBuilder()
@@ -48,14 +50,6 @@ const Buttons = {
   create: {}
 }
 
-
-function truncateString(str, num) {
-  if (str.length <= num) {
-    return str
-  }
-  return str.slice(0, num) + '...'
-}
-
 const guildTicketsFiles = fs.readdirSync("./guildTickets")
 for (const guildTicketsFile of guildTicketsFiles) {
   const guildTicketsConfig = require(`../guildTickets/${guildTicketsFile}`)
@@ -81,8 +75,7 @@ for (const guildTicketsFile of guildTicketsFiles) {
     }
 
     Buttons.create[guildTicketsConfigProperty].addComponents(select)
-
   }
 }
 
-module.exports = Buttons
+export { Buttons }
