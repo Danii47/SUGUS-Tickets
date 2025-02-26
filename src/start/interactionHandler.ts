@@ -37,7 +37,12 @@ module.exports = {
         }
       })
 
-      const subCommand = interaction.options.getSubcommand()
+      let subCommand: string | null = null
+      try {
+        subCommand = interaction.options.getSubcommand()
+      } catch (e) {
+        subCommand = null
+      }
 
       if (logCommandChannel) logCommandChannel.send({
         embeds: [
