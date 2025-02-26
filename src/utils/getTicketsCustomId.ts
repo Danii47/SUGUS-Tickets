@@ -4,10 +4,10 @@ export const getTicketCustomIds = (): string[] => {
 
   const createTicketsCustomIds: string[] = []
 
-  const guildTicketsFiles = fs.readdirSync("./guildTickets")
+  const guildTicketsFiles = fs.readdirSync("./src/guildTickets")
 
   for (const guildTicketsFile of guildTicketsFiles) {
-    const guildTicketsConfig = require(`../guildTickets/${guildTicketsFile}`)
+    const { Config: guildTicketsConfig } = require(`../guildTickets/${guildTicketsFile}`)
 
     for (const guildTicketsConfigProperty in guildTicketsConfig) {
       for (const tickets in guildTicketsConfig[guildTicketsConfigProperty].ticketOptions) {
