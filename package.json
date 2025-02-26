@@ -2,10 +2,11 @@
   "name": "sugus-tickets",
   "version": "1.0.0",
   "description": "SUGUS UVa discord bot",
-  "main": "indexTickets.js",
+  "main": "dist/index.js",
   "scripts": {
-    "dev": "node --watch indexTickets.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node ."
   },
   "repository": {
     "type": "git",
@@ -31,5 +32,9 @@
     "fs": "0.0.1-security",
     "moment": "2.30.1",
     "mongoose": "8.10.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.5",
+    "tsx": "^4.19.3"
   }
 }
