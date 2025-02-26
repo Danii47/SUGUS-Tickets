@@ -37,7 +37,7 @@ for (const startFile of startFiles) {
 
 // ! -.- BUTTONS HANDLER -.- ! \\
 
-const buttonsHandlerPath = path.resolve(__dirname, "src", "buttonsHandler")
+const buttonsHandlerPath = path.resolve(__dirname, "buttonsHandler")
 const buttonsHandlerFiles = fs.readdirSync(buttonsHandlerPath).filter(file => file.endsWith(".js") || file.endsWith(".ts"))
 
 for (const buttonsHandlerFile of buttonsHandlerFiles) {
