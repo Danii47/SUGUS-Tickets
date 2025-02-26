@@ -1,6 +1,7 @@
 import { ConfigType } from "../types/CustomTypes"
 
-const { ctfRoles: roles } = require("../../configs/rolesId.json")
+import rolesId from "../configs/rolesId.json"
+const { ctfRoles: roles } = rolesId
 
 const Config: ConfigType = {
   ctfTickets: {
@@ -24,7 +25,7 @@ const Config: ConfigType = {
         style: "Secondary",
         emoji: "❓",
         disabled: false,
-        categoryId: "1343913385317892177",
+        categoryId: "1344445016696688793",
         embedTitle: function () {
           return `
           TICKET ${this.label.toUpperCase()}
@@ -48,7 +49,7 @@ const Config: ConfigType = {
         style: "Secondary",
         emoji: "🔨",
         disabled: false,
-        categoryId: "1343913385317892177",
+        categoryId: "1344445016696688793",
         embedTitle: function () {
           return `
           TICKET ${this.label.toUpperCase()}
@@ -68,4 +69,4 @@ const Config: ConfigType = {
   }
 }
 
-module.exports = Config
+export { Config }
