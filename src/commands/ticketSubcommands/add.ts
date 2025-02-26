@@ -1,23 +1,24 @@
-const { EmbedBuilder, MessageFlags } = require("discord.js")
-const ActiveTicketsSchema = require("../../schemas/ActiveTicketsSchema")
+import { ChatInputCommandInteraction, GuildMember, MessageFlags, TextChannel } from "discord.js"
+import ActiveTicketsSchema from "../../schemas/ActiveTicketsSchema"
 
-module.exports = {
+export default {
   name: "añadir",
-  async run(_, interaction) {
+  async run(_: any, interaction: ChatInputCommandInteraction) {
 
-    const member = interaction.options.getMember("usuario")
+    const member = interaction.options.getMember("usuario") as GuildMember
     const role = interaction.options.getRole("rol")
 
     if (!member && !role) return interaction.reply({ content: "Debes seleccionar una de las dos opciones para añadir.", flags: MessageFlags.Ephemeral })
 
-    const channelToAddUser = interaction.channel
+    const channelToAddUser = interaction.channel as TextChannel
+    if (!channelToAddUser) return interaction.reply({ content: "No se ha podido obtener el canal.", flags: MessageFlags.Ephemeral })
 
-    const ActiveTicketData = await ActiveTicketsSchema.findOne({ channelId: interaction.channel.id })
+    const ActiveTicketData = await ActiveTicketsSchema.findOne({ channelId: channelToAddUser.id })
 
 
     if (member) {
 
-      await channelToAddUser.permissionOverwrites.edit(member.id, {
+      await channelToAddUser.permissionOverwrites.edit(member.user.id, {
         ViewChannel: true,
         SendMessages: true,
         ReadMessageHistory: true,
