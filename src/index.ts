@@ -2,7 +2,8 @@
 
 import { Client, IntentsBitField, Events, Collection, ButtonInteraction, StringSelectMenuInteraction } from "discord.js"
 import mongoose from "mongoose"
-import fs from "fs"
+import fs from "node:fs"
+import path from "node:path"
 import moment from "moment"
 import { slashCommandsFolderName } from "./configs/generalConfig.json"
 import "dotenv/config"
@@ -26,18 +27,22 @@ mongoose.connect(process.env.MONGOOSE_CONNECT)
 
 // ! -.- START FILES HANDLER -.- ! \\
 
-const startFiles = fs.readdirSync("./src/start")
+const startPath = path.resolve(__dirname, "start")
+const startFiles = fs.readdirSync(startPath)
 for (const startFile of startFiles) {
-  const startFileData = require(`./start/${startFile}`)
+  const startFileData = require(path.resolve(startPath, startFile))
   client.on(startFileData.eventName, (...args) => startFileData.run(client, ...args))
 }
 
 
 // ! -.- BUTTONS HANDLER -.- ! \\
 
-const buttonsHandlerFolder = fs.readdirSync("./src/buttonsHandler")
-for (const buttonsHandlerFiles of buttonsHandlerFolder) {
-  const { buttonHandlerFunction }: { buttonHandlerFunction: ButtonHandlerFunction } = require(`./buttonsHandler/${buttonsHandlerFiles}`)
+const buttonsHandlerPath = path.resolve(__dirname, "src", "buttonsHandler")
+const buttonsHandlerFiles = fs.readdirSync(buttonsHandlerPath).filter(file => file.endsWith(".js") || file.endsWith(".ts"))
+
+for (const buttonsHandlerFile of buttonsHandlerFiles) {
+  const buttonsHandlerPath = path.resolve(__dirname, "buttonsHandler", buttonsHandlerFile)
+  const { buttonHandlerFunction }: { buttonHandlerFunction: ButtonHandlerFunction } = require(buttonsHandlerPath)
 
   client.on(Events.InteractionCreate, (interaction) => {
     if (interaction.isStringSelectMenu() || interaction.isButton()) {
@@ -52,14 +57,19 @@ for (const buttonsHandlerFiles of buttonsHandlerFolder) {
 client.slashCommands = new Collection()
 client.commands = []
 
-const slashCommandFiles = fs.readdirSync(`./src/${slashCommandsFolderName}`).filter(file => file.endsWith(".ts"))
+const slashCommandPath = path.resolve(__dirname, slashCommandsFolderName)
+const slashCommandFiles = fs.readdirSync(slashCommandPath).filter(file => file.endsWith(".ts") || file.endsWith(".js"))
 
 for (const slashCommandFile of slashCommandFiles) {
-  const { default: slashCommand } = require(`./${slashCommandsFolderName}/${slashCommandFile}`)
-  
-  client.slashCommands.set(slashCommand.data.name, slashCommand)
-  client.commands.push(slashCommand.data.toJSON())
-  console.log(`[SLASHCOMMAND] ✅🔔 Comando cargado -> ${slashCommandFile}`)
+  const slashCommandPath = path.resolve(__dirname, slashCommandsFolderName, slashCommandFile)
+  //const { default: slashCommand } = await 
+  import(`file://${slashCommandPath}`)
+    .then(({ default: slashCommand }) => {
+      client.slashCommands.set(slashCommand.data.name, slashCommand)
+      client.commands.push(slashCommand.data.toJSON())
+      console.log(`[SLASHCOMMAND] ✅🔔 Comando cargado -> ${slashCommandFile}`)
+    })
+    .catch((error) => console.log(`[SLASHCOMMAND] ❌🔔 Ocurrio un error al intentar cargar el comando ${slashCommandFile}:\n`, error))
 }
 
 
