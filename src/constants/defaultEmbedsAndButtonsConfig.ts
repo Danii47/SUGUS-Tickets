@@ -46,7 +46,7 @@ export const defaultEmbedsConfig = {
     color: "Red"
   },
   deleteTicket: {
-    color: "ca1414"
+    color: "#ca1414"
   },
   infoTicket: {
     color: "Blue"
