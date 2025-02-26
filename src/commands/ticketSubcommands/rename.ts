@@ -1,6 +1,5 @@
 import { MessageFlags, ChatInputCommandInteraction, TextChannel } from "discord.js"
 
-
 export default {
   name: "renombrar",
   async run(_: any, interaction: ChatInputCommandInteraction) {
