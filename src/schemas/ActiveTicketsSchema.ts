@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose")
+import { Schema, model } from "mongoose"
 
 const ActiveTicketsSchema = new Schema({
   channelId: {
@@ -15,4 +15,4 @@ const ActiveTicketsSchema = new Schema({
   }
 })
 
-module.exports = model('ActiveTicketsSchema', ActiveTicketsSchema)
+export default model('ActiveTicketsSchema', ActiveTicketsSchema)

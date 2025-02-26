@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose")
+import { Schema, model } from "mongoose"
 
 const TicketsCountSchema = new Schema({
   customId: {
@@ -11,4 +11,4 @@ const TicketsCountSchema = new Schema({
   }
 })
 
-module.exports = model('TicketsCountSchema', TicketsCountSchema)
+export default model('TicketsCountSchema', TicketsCountSchema)
