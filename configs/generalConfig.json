@@ -1,0 +1,13 @@
+{
+  "dev": "@dani47",
+  "devId": "629970427455995917",
+  "serverName": "SUGUS",
+  "defaultColor": "8a5b8f",
+  "defaultTitle": "TICKET",
+  "defaultDescription": "Un administrador te ayudará lo antes posible.",
+  "slashCommandsFolderName": "commands",
+  "channels": {
+    "logCommands": "",
+    "crashBot": ""
+  }
+}
