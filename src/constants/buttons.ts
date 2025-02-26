@@ -39,7 +39,7 @@ const Buttons: ButtonsType = {
         .setStyle(defaultButtonsConfig.delete.style)
         .setEmoji(defaultButtonsConfig.delete.emoji)
         .setDisabled(defaultButtonsConfig.delete.disabled),
-      
+
       new ButtonBuilder()
         .setCustomId(defaultButtonsConfig.reopen.customId)
         .setLabel(defaultButtonsConfig.reopen.label)
@@ -50,11 +50,11 @@ const Buttons: ButtonsType = {
   create: {}
 }
 
-const guildTicketsFiles = fs.readdirSync("./guildTickets")
+const guildTicketsFiles = fs.readdirSync("./src/guildTickets")
 for (const guildTicketsFile of guildTicketsFiles) {
-  const guildTicketsConfig = require(`../guildTickets/${guildTicketsFile}`)
-  for (const guildTicketsConfigProperty in guildTicketsConfig) {
+  const { Config: guildTicketsConfig } = require(`../guildTickets/${guildTicketsFile}`)
 
+  for (const guildTicketsConfigProperty in guildTicketsConfig) {
     Buttons.create[guildTicketsConfigProperty] = new ActionRowBuilder()
 
     const select = new StringSelectMenuBuilder()
@@ -64,14 +64,13 @@ for (const guildTicketsFile of guildTicketsFiles) {
     for (const property in guildTicketsConfig[guildTicketsConfigProperty].ticketOptions) {
 
       const ticketInfo = guildTicketsConfig[guildTicketsConfigProperty].ticketOptions[property]
-      
+
       select.addOptions(
         new StringSelectMenuOptionBuilder()
-          .setLabel(`${ticketInfo.emoji ? `${ticketInfo.emoji} ` : ""}${ticketInfo.label}`)
+          .setLabel(ticketInfo.label)
           .setDescription(truncateString(ticketInfo.description.replaceAll("*", "").replaceAll("__", ""), 95))
           .setValue(ticketInfo.customId)
       )
-
     }
 
     Buttons.create[guildTicketsConfigProperty].addComponents(select)
