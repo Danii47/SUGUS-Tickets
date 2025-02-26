@@ -1,12 +1,12 @@
 // ! "discord.js": "14.18.0"
 
-import { Client, IntentsBitField, Events, Collection } from "discord.js"
+import { Client, IntentsBitField, Events, Collection, ButtonInteraction, StringSelectMenuInteraction } from "discord.js"
 import mongoose from "mongoose"
 import fs from "fs"
 import moment from "moment"
 import { slashCommandsFolderName } from "./configs/generalConfig.json"
 import "dotenv/config"
-import { MyClient } from "./types/CustomTypes"
+import { ButtonHandlerFunction, MyClient } from "./types/CustomTypes"
 
 const client = new Client({
   intents: new IntentsBitField(3276799)
@@ -37,9 +37,12 @@ for (const startFile of startFiles) {
 
 const buttonsHandlerFolder = fs.readdirSync("./buttonsHandler")
 for (const buttonsHandlerFiles of buttonsHandlerFolder) {
-
-  const { buttonHandlerFunction } = require(`./buttonsHandler/${buttonsHandlerFiles}`)
-  client.on(Events.InteractionCreate, (interaction) => { if (interaction.isStringSelectMenu() || interaction.isButton()) buttonHandlerFunction(client, interaction) })
+  const { buttonHandlerFunction }: { buttonHandlerFunction: ButtonHandlerFunction } = require(`./buttonsHandler/${buttonsHandlerFiles}`)
+  client.on(Events.InteractionCreate, (interaction) => { 
+    if (interaction.isStringSelectMenu() || interaction.isButton()) {
+      buttonHandlerFunction(client, interaction as ButtonInteraction | StringSelectMenuInteraction)
+    }
+  })
 
 }
 
