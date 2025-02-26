@@ -1,16 +1,17 @@
-const getTicketCustomIds = require("../utils/getTicketsCustomId")
-const getTicketByCustomId = require("../utils/getTicketByCustomId")
-const zeroFill = require("../utils/zeroFill")
-const { dev, serverName, defaultColor } = require("../configs/generalConfig.json")
-const { ChannelType, EmbedBuilder, MessageFlags } = require("discord.js")
-const Buttons = require("../constants/buttons")
-const TicketsCountSchema = require("../schemas/TicketsCountSchema")
-const ActiveTicketsSchema = require("../schemas/ActiveTicketsSchema")
+import { CategoryChannel, ChannelType, ColorResolvable, EmbedBuilder, MessageFlags, OverwriteResolvable, StringSelectMenuInteraction, TextChannel } from "discord.js"
+import { getTicketCustomIds } from "../utils/getTicketsCustomId"
+import { getTicketByCustomId } from "../utils/getTicketByCustomId"
+import { zeroFill } from "../utils/zeroFill"
+import { dev, serverName, defaultColor, defaultTitle, defaultDescription } from "../configs/generalConfig.json"
+import { Buttons } from "../constants/buttons"
+import TicketsCountSchema from "../schemas/TicketsCountSchema"
+import ActiveTicketsSchema from "../schemas/ActiveTicketsSchema"
 
-module.exports = {
-  async buttonHandlerFunction(_, interaction) {
+export default {
+  async buttonHandlerFunction(_: any, interaction: StringSelectMenuInteraction) {
 
     if (!interaction.isStringSelectMenu()) return
+    if (!interaction.guild) return interaction.reply({ content: "No se ha podido obtener la información del servidor.", flags: MessageFlags.Ephemeral })
 
     const createTicketsCustomIds = getTicketCustomIds()
     if (!createTicketsCustomIds.includes(interaction.values[0])) return
@@ -32,24 +33,28 @@ module.exports = {
 
     console.log(`[TICKETS] El usuario ${interaction.user.username} ha creado un ticket de ${ticketInfo.name}.`)
   
-    const ticketParent = interaction.guild.channels.cache.find(parent => parent.id == ticketInfo.categoryId && parent.type == ChannelType.GuildCategory)
+    const ticketParent = interaction.guild.channels.cache.find(parent => parent.id === ticketInfo.categoryId && parent.type === ChannelType.GuildCategory) as CategoryChannel
+    
     const ticketParentId = (!ticketParent || ticketParent?.children.cache.size >= 45) ? undefined : ticketInfo.categoryId
 
-    const openPermissionOverwrites = [...ticketInfo.permissions.filter((permission) => interaction.guild.roles.cache.get(permission.id))]
+    const openPermissionOverwrites = [...ticketInfo.permissions.filter((permission) => interaction.guild?.roles.cache.get(permission.id))]
+
     openPermissionOverwrites.push({ id: interaction.user.id, allow: ['ViewChannel', 'SendMessages', 'ReadMessageHistory', 'AttachFiles'] })
 
     interaction.guild.channels.create({
       name: `${ticketInfo.name}-${zeroFill(ticketCount, 4)}`,
       type: ChannelType.GuildText,
       parent: ticketParentId,
-      permissionOverwrites: openPermissionOverwrites
+      permissionOverwrites: openPermissionOverwrites as OverwriteResolvable[]
     })
       .catch((err) => console.log(`No fue posible crear el ticket de ${ticketInfo.name}. \nERROR: ${err}`))
       .then(async (ticketChannel) => {
+        if (!ticketChannel) return
+        
         let mentions
         if (ticketInfo.mentions) {
           mentions = ticketInfo.mentions.map((roleId) => {
-            if (interaction.guild.roles.cache.get(roleId)) return `<@&${roleId}>`
+            if (interaction.guild?.roles.cache.get(roleId)) return `<@&${roleId}>`
           })
         }
 
@@ -58,13 +63,12 @@ module.exports = {
           components: [Buttons.close],
           embeds: [
             new EmbedBuilder()
-            .setColor(ticketInfo.embedColor || defaultColor)
+            .setColor((ticketInfo.embedColor || defaultColor) as ColorResolvable)
             .setTitle(ticketInfo.embedTitle() || defaultTitle)
             .setDescription(ticketInfo.embedDescription || defaultDescription)
-              .setFooter({ text: `${serverName || "Servidor"}`, iconURL: interaction.guild.iconURL() })
-              .setTimestamp()
-          ],
-          files: ticketInfo.embedFiles || []
+            .setFooter({ text: `${serverName || "Servidor"}`, iconURL: interaction.guild?.iconURL() || undefined })
+            .setTimestamp()
+          ]
         })
         
         const newActiveTicketsData = new ActiveTicketsSchema({
