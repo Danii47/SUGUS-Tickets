@@ -16,7 +16,7 @@ export default {
 
     if (member) {
       await channelToRemoveUser.permissionOverwrites.delete(member.id)
-      
+
       await interaction.reply({
         content: `📥 El usuario ${member} ha sido eliminado del ticket.`,
         flags: MessageFlags.Ephemeral

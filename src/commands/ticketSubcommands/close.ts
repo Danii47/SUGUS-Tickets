@@ -25,9 +25,10 @@ export default {
     const sentMessagesInChannel = await channel.messages.fetch()
     const sentMessagesInChannelArray = Array.from(sentMessagesInChannel.values())
     const formattedMessagesInChannel = sentMessagesInChannelArray.map(message => {
+      const offset = moment(message.createdTimestamp).isDST() ? "+0200" : "+0100"
       return {
         author: `${message.author} (${message.author.username} ${message.author.globalName})`,
-        date: `${moment(message.createdTimestamp).format('llll')}`
+        date: `${moment(message.createdTimestamp).utcOffset(offset).format('llll')}`
       }
     })
 
@@ -40,7 +41,7 @@ export default {
         message.author.id !== client.user.id
       ) usersParticipateInTicket.push(message.author)
     })
-    
+
     const ticketTranscriptName = `${(ActiveTicketData?.ticketInfo?.name) ? `${ActiveTicketData.ticketInfo.name}-${channel.name}.html` : `${channel.name}.html`}`
     const transcriptAttachment = await createTranscript(channel, { filename: ticketTranscriptName, limit: -1 })
 

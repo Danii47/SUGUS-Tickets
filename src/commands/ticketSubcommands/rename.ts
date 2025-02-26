@@ -10,7 +10,7 @@ export default {
     if (!ticketNumber) return interaction.reply({ content: "No se ha podido obtener el número de ticket.", flags: MessageFlags.Ephemeral })
     if (!pushValue) return interaction.reply({ content: "No se ha podido obtener el valor añadido.", flags: MessageFlags.Ephemeral })
     if (!interaction.channel) return interaction.reply({ content: "No se ha podido obtener el canal.", flags: MessageFlags.Ephemeral })
-  
+
     const channel = interaction.channel as TextChannel
 
     if (channel.name.includes(ticketNumber)) {

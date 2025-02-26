@@ -9,7 +9,7 @@ export default {
 
     if (!channel) return await interaction.reply({ content: "No se ha podido obtener el canal.", ephemeral: true })
 
-    await interaction.reply({ content: `El ticket será borrado en 5 segundos por ${interaction.user}`})
+    await interaction.reply({ content: `El ticket será borrado en 5 segundos por ${interaction.user}` })
 
     const ActiveTicketData = await ActiveTicketsSchema.findOne({ channelId: channel.id })
     if (ActiveTicketData) await ActiveTicketData.deleteOne()
@@ -17,6 +17,6 @@ export default {
     setTimeout(() => {
       if (client.channels.cache.get(channel.id)) channel.delete().catch((e) => console.log(`No fue posible eliminar un canal de ticket. Probablemente se deba a que ha sido ya eliminado.\nERR: ${e}`))
     }, 5000)
-  
+
   }
 }
