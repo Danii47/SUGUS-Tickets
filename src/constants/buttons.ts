@@ -5,7 +5,7 @@ import { ButtonsType } from "../types/CustomTypes"
 import { truncateString } from "../utils/truncateString"
 
 const Buttons: ButtonsType = {
-  close: new ActionRowBuilder()
+  close: new ActionRowBuilder<ButtonBuilder>()
     .addComponents([
       new ButtonBuilder()
         .setCustomId(defaultButtonsConfig.close.customId)
@@ -14,7 +14,7 @@ const Buttons: ButtonsType = {
         .setEmoji(defaultButtonsConfig.close.emoji)
         .setDisabled(defaultButtonsConfig.close.disabled)
     ]),
-  cancelAndConfirmClose: new ActionRowBuilder()
+  cancelAndConfirmClose: new ActionRowBuilder<ButtonBuilder>()
     .addComponents([
       new ButtonBuilder()
         .setCustomId(defaultButtonsConfig.cancelClose.customId)
@@ -31,7 +31,7 @@ const Buttons: ButtonsType = {
         .setEmoji(defaultButtonsConfig.confirmClose.emoji)
         .setDisabled(defaultButtonsConfig.confirmClose.disabled)
     ]),
-  deleteAndReopen: new ActionRowBuilder()
+  deleteAndReopen: new ActionRowBuilder<ButtonBuilder>()
     .addComponents([
       new ButtonBuilder()
         .setCustomId(defaultButtonsConfig.delete.customId)
