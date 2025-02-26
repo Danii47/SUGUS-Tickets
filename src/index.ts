@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGOOSE_CONNECT)
 
 // ! -.- START FILES HANDLER -.- ! \\
 
-const startFiles = fs.readdirSync("./start")
+const startFiles = fs.readdirSync("./src/start")
 for (const startFile of startFiles) {
   const startFileData = require(`./start/${startFile}`)
   client.on(startFileData.eventName, (...args) => startFileData.run(client, ...args))
@@ -35,15 +35,15 @@ for (const startFile of startFiles) {
 
 // ! -.- BUTTONS HANDLER -.- ! \\
 
-const buttonsHandlerFolder = fs.readdirSync("./buttonsHandler")
+const buttonsHandlerFolder = fs.readdirSync("./src/buttonsHandler")
 for (const buttonsHandlerFiles of buttonsHandlerFolder) {
   const { buttonHandlerFunction }: { buttonHandlerFunction: ButtonHandlerFunction } = require(`./buttonsHandler/${buttonsHandlerFiles}`)
-  client.on(Events.InteractionCreate, (interaction) => { 
+
+  client.on(Events.InteractionCreate, (interaction) => {
     if (interaction.isStringSelectMenu() || interaction.isButton()) {
       buttonHandlerFunction(client, interaction as ButtonInteraction | StringSelectMenuInteraction)
     }
   })
-
 }
 
 
@@ -52,10 +52,11 @@ for (const buttonsHandlerFiles of buttonsHandlerFolder) {
 client.slashCommands = new Collection()
 client.commands = []
 
-const slashCommandFiles = fs.readdirSync(`./${slashCommandsFolderName}`).filter(file => file.endsWith(".js"))
+const slashCommandFiles = fs.readdirSync(`./src/${slashCommandsFolderName}`).filter(file => file.endsWith(".ts"))
 
 for (const slashCommandFile of slashCommandFiles) {
-  const slashCommand = require(`./${slashCommandsFolderName}/${slashCommandFile}`)
+  const { default: slashCommand } = require(`./${slashCommandsFolderName}/${slashCommandFile}`)
+  
   client.slashCommands.set(slashCommand.data.name, slashCommand)
   client.commands.push(slashCommand.data.toJSON())
   console.log(`[SLASHCOMMAND] ✅🔔 Comando cargado -> ${slashCommandFile}`)
