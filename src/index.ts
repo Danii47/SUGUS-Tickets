@@ -26,7 +26,7 @@ mongoose.connect(process.env.MONGOOSE_CONNECT)
 
 // ! -.- START FILES HANDLER -.- ! \\
 
-const startFiles = fs.readdirSync("./src/start")
+const startFiles = fs.readdirSync(`./${process.env.DEVELOPMENT === "true" ? "src" : "dist"}/start`)
 for (const startFile of startFiles) {
   const startFileData = require(`./start/${startFile}`)
   client.on(startFileData.eventName, (...args) => startFileData.run(client, ...args))
@@ -35,7 +35,7 @@ for (const startFile of startFiles) {
 
 // ! -.- BUTTONS HANDLER -.- ! \\
 
-const buttonsHandlerFolder = fs.readdirSync("./src/buttonsHandler")
+const buttonsHandlerFolder = fs.readdirSync(`./${process.env.DEVELOPMENT === "true" ? "src" : "dist"}/buttonsHandler`)
 for (const buttonsHandlerFiles of buttonsHandlerFolder) {
   const { buttonHandlerFunction }: { buttonHandlerFunction: ButtonHandlerFunction } = require(`./buttonsHandler/${buttonsHandlerFiles}`)
 
@@ -52,7 +52,7 @@ for (const buttonsHandlerFiles of buttonsHandlerFolder) {
 client.slashCommands = new Collection()
 client.commands = []
 
-const slashCommandFiles = fs.readdirSync(`./src/${slashCommandsFolderName}`).filter(file => file.endsWith(".ts"))
+const slashCommandFiles = fs.readdirSync(`./${process.env.DEVELOPMENT === "true" ? "src" : "dist"}/${slashCommandsFolderName}`).filter(file => file.endsWith(".ts") || file.endsWith(".js"))
 
 for (const slashCommandFile of slashCommandFiles) {
   const { default: slashCommand } = require(`./${slashCommandsFolderName}/${slashCommandFile}`)

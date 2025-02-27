@@ -50,7 +50,7 @@ const Buttons: ButtonsType = {
   create: {}
 }
 
-const guildTicketsFiles = fs.readdirSync("./src/guildTickets")
+const guildTicketsFiles = fs.readdirSync(`./${process.env.DEVELOPMENT === "true" ? "src" : "dist"}/guildTickets`)
 for (const guildTicketsFile of guildTicketsFiles) {
   const { Config: guildTicketsConfig } = require(`../guildTickets/${guildTicketsFile}`)
 

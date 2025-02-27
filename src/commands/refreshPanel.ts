@@ -31,7 +31,7 @@ export default {
     const panel = interaction.options.getString("panel")
     if (!panel) return interaction.editReply({ content: "No se ha podido obtener el panel." })
 
-    const { Config: guildTicketInfo } = require(`../guildTickets/${NAMES_OF_TICKET_FILES[interaction.guild.id]}.ts`)
+    const { Config: guildTicketInfo } = require(`../guildTickets/${NAMES_OF_TICKET_FILES[interaction.guild.id]}.${process.env.DEVELOPMENT ? "ts" : "js"}`)
 
     const panelInfo = guildTicketInfo[panel]
     if (!panelInfo) return interaction.editReply({ content: "El panel que has introducido no existe." })

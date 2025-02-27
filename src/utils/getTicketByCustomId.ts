@@ -5,7 +5,7 @@ export const getTicketByCustomId = (customId: string): TicketInfo => {
 
   let ticketInfo
 
-  const guildTicketsFiles = fs.readdirSync("./src/guildTickets")
+  const guildTicketsFiles = fs.readdirSync("./dist/guildTickets")
 
   for (const guildTicketsFile of guildTicketsFiles) {
     const { Config: guildTicketsConfig } = require(`../guildTickets/${guildTicketsFile}`)
